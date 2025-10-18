@@ -389,7 +389,7 @@ class HiFiC:
                         return ds
 
                 builder = SimpleTFDSBuilder(
-                    "/home/stuart/tensorflow_datasets/clic/1.0.0",
+                    "/kaggle/input/clic-dataset/",
                 )
                 dataset = builder.as_dataset(split="train")
 
