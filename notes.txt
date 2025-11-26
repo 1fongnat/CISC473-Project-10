@@ -1,0 +1,14 @@
+pip install triton --find-links https://huggingface.co/madbuda/triton-windows-builds/tree/main/
+
+use triton-windows, command is below
+pip install triton-windows
+
+windows path length limit causes error in temp file, enable long path lengths in your system
+
+you need to be running this on gpu, flex-attention does not work on cpu
+
+On windows, you may need microsoft build tools and cuda development kit.
+
+https://github.com/Justin-Tan/high-fidelity-generative-compression
+
+protobut==4.21.12 got uninstalled with tensorflow
