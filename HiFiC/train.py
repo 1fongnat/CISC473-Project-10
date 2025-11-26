@@ -192,8 +192,10 @@ def train(args, model, train_loader, test_loader, device, logger, optimizers):
 
         if model.step_counter > args.n_steps:
             break
-    
-    with open(os.path.join(args.storage_save, 'storage_{}_{:%Y_%m_%d_%H:%M:%S}.pkl'.format(args.name, datetime.datetime.now())), 'wb') as handle:
+    timestamp = datetime.datetime.now().strftime('%Y_%m_%d_%H-%M-%S')
+    filename = f"storage_{args.name}_{timestamp}.pkl"
+
+    with open(os.path.join(args.storage_save, filename), 'wb') as handle:
         pickle.dump(storage, handle, protocol=pickle.HIGHEST_PROTOCOL)
     
     ckpt_path = utils.save_model(model, optimizers, mean_epoch_loss, epoch, device, args=args, logger=logger)

@@ -2,9 +2,6 @@ from flextok.flextok_wrapper import FlexTokFromHub
 from flextok.utils.demo import imgs_from_urls
 import matplotlib.pyplot as plt
 
-# os.environ["TORCHINDUCTOR"] = "0"
-# os.environ["TORCH_COMPILE_DISABLE"] = "1"
-
 device = "cuda"
 
 # Load FlexTok model
