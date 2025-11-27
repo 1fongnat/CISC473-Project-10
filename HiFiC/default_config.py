@@ -1,3 +1,8 @@
+import os
+from pathlib import Path
+
+DIR = os.path.abspath(os.path.dirname(__file__))
+
 #!/usr/bin/env python3
 
 """
@@ -26,7 +31,7 @@ class DatasetPaths(object):
     # OPENIMAGES = 'data/openimages'
     CITYSCAPES = ''
     JETS = ''
-    CLIC_SMALL = 'HiFiC/data/clic_small'
+    CLIC_SMALL = os.path.join(DIR, 'data/clic_small')
 
 class directories(object):
     experiments = 'experiments'
