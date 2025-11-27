@@ -12,3 +12,5 @@ On windows, you may need microsoft build tools and cuda development kit.
 https://github.com/Justin-Tan/high-fidelity-generative-compression
 
 protobut==4.21.12 got uninstalled with tensorflow
+
+We have to pip install -e . in the FlexTok directory, that is not included in requirements.txt

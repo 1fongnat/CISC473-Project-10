@@ -19,7 +19,6 @@ etils==1.13.0
 exceptiongroup==1.3.1
 filelock==3.20.0
 flatbuffers==25.9.23
--e git+https://github.com/1fongnat/CISC473-Project-10.git@988e7169712317c5ac6e0e5b347d333af84c1475#egg=flextok&subdirectory=flextok     
 fonttools==4.60.1
 fsspec==2025.10.0
 gast==0.6.0
