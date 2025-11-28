@@ -216,6 +216,10 @@ class Model(nn.Module):
 
         weighted_rate, rate_penalty = losses.weighted_rate_loss(self.args, total_nbpp=intermediates.n_bpp,
             total_qbpp=intermediates.q_bpp, step_counter=self.step_counter, ignore_schedule=self.args.ignore_schedule)
+        
+        weighted_R_D_loss = weighted_rate + weighted_distortion
+        weighted_compression_loss = weighted_R_D_loss + weighted_perceptual
+
         print(
         f"""
         Weighted compression loss: {weighted_compression_loss}
@@ -223,8 +227,6 @@ class Model(nn.Module):
         Weighted perceptual loss: {weighted_perceptual}
         """
         )
-        weighted_R_D_loss = weighted_rate + weighted_distortion
-        weighted_compression_loss = weighted_R_D_loss + weighted_perceptual
 
         # Bookkeeping 
         if (self.step_counter % self.log_interval == 1):
