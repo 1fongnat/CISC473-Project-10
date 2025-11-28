@@ -96,8 +96,6 @@ class FlexAttention(nn.Module):
         # Apply optional RoPE
         if rope_forward is not None:
             q, k, v = rope_forward(q, k, v)
-        # print(q.device)
-        # quit()
         if self.use_flex_attention:
             # Run FlexAttention with score_mod and/or block_mask
             x = self.flex_attention(

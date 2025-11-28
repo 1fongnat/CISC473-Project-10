@@ -21,7 +21,7 @@ SCALE_MIN = 0.75
 SCALE_MAX = 0.95
 DATASETS_DICT = {"openimages": "OpenImages", "cityscapes": "CityScapes", 
                  "jetimages": "JetImages", "evaluation": "Evaluation",
-                 "clic_small": "CLIC_Small"}
+                 "clic_all": "CLIC_All"}
 DATASETS = list(DATASETS_DICT.keys())
 
 def get_dataset(dataset):
@@ -293,7 +293,7 @@ class CityScapes(datasets.Cityscapes):
                          transform=self._transforms(scale=np.random.uniform(0.5,1.0), 
                             H=512, W=1024))
         
-class CLIC_Small(BaseDataset):
+class CLIC_All(BaseDataset):
     """Subset of CLIC Dataset.
 
     Parameters
@@ -304,7 +304,7 @@ class CLIC_Small(BaseDataset):
     """
     files = {"train": "train", "test": "test", "val": "validation"}
 
-    def __init__(self, root=os.path.join(DIR, 'data/clic_small'), mode='train', crop_size=256, 
+    def __init__(self, root=os.path.join(DIR, 'data/clic_all'), mode='train', crop_size=256, 
         normalize=False, **kwargs):
         super().__init__(root, [transforms.ToTensor()], **kwargs)
 
