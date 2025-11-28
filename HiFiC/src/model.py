@@ -216,7 +216,7 @@ class Model(nn.Module):
 
         weighted_rate, rate_penalty = losses.weighted_rate_loss(self.args, total_nbpp=intermediates.n_bpp,
             total_qbpp=intermediates.q_bpp, step_counter=self.step_counter, ignore_schedule=self.args.ignore_schedule)
-        logger.info(
+        print(
         f"""
         Weighted compression loss: {weighted_compression_loss}
         Weighted rate + distortion loss: {weighted_R_D_loss}
