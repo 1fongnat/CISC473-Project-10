@@ -42,7 +42,7 @@ class args(object):
     """
     name = 'hific_v0.1'
     silent = True
-    n_epochs = 24
+    n_epochs = 128
     n_steps = 1e6
     batch_size = 8
     log_interval = 1000

@@ -100,6 +100,8 @@ def train(args, model, train_loader, test_loader, device, logger, optimizers):
     if model.use_discriminator is True:
         disc_opt = optimizers['disc']
 
+    all_mean_epoch_loss = []
+    all_mean_epoch_test_loss = []
 
     for epoch in trange(args.n_epochs, desc='Epoch'):
 
@@ -186,6 +188,8 @@ def train(args, model, train_loader, test_loader, device, logger, optimizers):
         # End epoch
         mean_epoch_loss = np.mean(epoch_loss)
         mean_epoch_test_loss = np.mean(epoch_test_loss)
+        all_mean_epoch_loss.append(mean_epoch_loss)
+        all_mean_epoch_test_loss.append(mean_epoch_test_loss)
 
         logger.info('===>> Epoch {} | Mean train loss: {:.3f} | Mean test loss: {:.3f}'.format(epoch, 
             mean_epoch_loss, mean_epoch_test_loss))    
@@ -201,7 +205,8 @@ def train(args, model, train_loader, test_loader, device, logger, optimizers):
     ckpt_path = utils.save_model(model, optimizers, mean_epoch_loss, epoch, device, args=args, logger=logger)
     args.ckpt = ckpt_path
     logger.info("Training complete. Time elapsed: {:.3f} s. Number of steps: {}".format((time.time()-start_time), model.step_counter))
-    
+    print("Training loss:", all_mean_epoch_loss)
+    print("Validation loss:", all_mean_epoch_test_loss)
     return model, ckpt_path
 
 
