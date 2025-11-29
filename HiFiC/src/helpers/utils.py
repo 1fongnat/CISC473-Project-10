@@ -159,7 +159,7 @@ def save_model(model, optimizers, mean_epoch_loss, epoch, device, args, logger, 
             if args.multigpu is True else model.Discriminator.state_dict()
         save_dict['discriminator_optimizer_state_dict'] = optimizers['disc'].state_dict()
 
-    torch.save(save_dict, f=model_path)
+    torch.save(save_dict, f=os.path.join(directory, 'checkpoint_file.pt'))
     logger.info('Saved model at Epoch {}, step {} to {}'.format(epoch, model.step_counter, model_path))
     
     model.to(device)  # Move back to device
