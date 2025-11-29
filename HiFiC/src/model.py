@@ -220,14 +220,6 @@ class Model(nn.Module):
         weighted_R_D_loss = weighted_rate + weighted_distortion
         weighted_compression_loss = weighted_R_D_loss + weighted_perceptual
 
-        print(
-        f"""
-        Weighted compression loss: {weighted_compression_loss}
-        Weighted rate + distortion loss: {weighted_R_D_loss}
-        Weighted perceptual loss: {weighted_perceptual}
-        """
-        )
-
         # Bookkeeping 
         if (self.step_counter % self.log_interval == 1):
             self.store_loss('rate_penalty', rate_penalty)

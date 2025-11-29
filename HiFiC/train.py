@@ -120,9 +120,7 @@ def train(args, model, train_loader, test_loader, device, logger, optimizers):
                     # Train D for D_steps, then G, using distinct batches
                     losses = model(data, train_generator=train_generator)
                     compression_loss = losses['compression']
-                    print(f"Compression loss: {compression_loss}")
                     disc_loss = losses['disc']
-                    print(f"Discriminator loss: {disc_loss}")
 
                     if train_generator is True:
                         optimize_compression_loss(compression_loss, amortization_opt, hyperlatent_likelihood_opt)
@@ -140,7 +138,6 @@ def train(args, model, train_loader, test_loader, device, logger, optimizers):
                     # Rate, distortion, perceptual only
                     losses = model(data, train_generator=True)
                     compression_loss = losses['compression']
-                    print(compression_loss)
                     optimize_compression_loss(compression_loss, amortization_opt, hyperlatent_likelihood_opt)
 
             except KeyboardInterrupt:

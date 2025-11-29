@@ -28,7 +28,6 @@ class Swish(nn.Module):
 
 def get_device(is_gpu=True):
     """Return the correct device"""
-    print(torch.cuda.is_available())
     return torch.device("cuda" if torch.cuda.is_available() and is_gpu
                         else "cpu")
 
@@ -89,7 +88,6 @@ def setup_generic_signature(args, special_info):
     else:
         args.name = '{}_{}_{}'.format(args.dataset, special_info, time_signature)
 
-    print(args.name)
     args.snapshot = os.path.join('experiments', args.name)
     args.checkpoints_save = os.path.join(args.snapshot, 'checkpoints')
     args.figures_save = os.path.join(args.snapshot, 'figures')
