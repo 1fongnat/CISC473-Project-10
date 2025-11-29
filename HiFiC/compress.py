@@ -203,6 +203,11 @@ def compress_and_decompress(args):
 
     pprint(df)
 
+    print(f"Average q_bpp: {df['q_bpp'].mean()}")
+    print(f"Average LPIPS: {df['LPIPS'].mean()}")
+    print(f"Average PSNR: {df['PSNR'].mean()}")
+    print(f"Average MS_SSIM: {df['MS_SSIM'].mean()}")
+
     logger.info('Complete. Reconstructions saved to {}. Output statistics saved to {}'.format(args.output_dir, df_path))
     delta_t = time.time() - start_time
     logger.info('Time elapsed: {:.3f} s'.format(delta_t))
