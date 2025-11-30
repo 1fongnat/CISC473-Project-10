@@ -278,7 +278,7 @@ def fix_target_paths(d):
     """Hardcode the correct file paths for hydra to find"""
     if isinstance(d, dict):
         if "_target_" in d:
-            d["_target_"] = d["_target_"].replace("flextok.", "HiFiC.src.FlexTok.flextok.")
+            d["_target_"] = d["_target_"].replace("flextok.", "FlexTok.flextok.")
         for v in d.values():
             fix_target_paths(v)
     elif isinstance(d, list):
