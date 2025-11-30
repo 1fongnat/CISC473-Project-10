@@ -19,6 +19,11 @@ from src.helpers import maths, datasets, utils
 from src.network import encoder, generator, discriminator, hyper
 from src.loss.perceptual_similarity import perceptual_loss as ps 
 
+# FlexTok modules
+from src.FlexTok.flextok.flextok_wrapper import FlexTok, FlexTokFromHub
+
+ft_model = FlexTokFromHub.from_pretrained('EPFL-VILAB/flextok_d18_d28_dfn').eval().to("cuda")
+
 from default_config import ModelModes, ModelTypes, hific_args, directories
 
 Intermediates = namedtuple("Intermediates",
@@ -309,6 +314,24 @@ class Model(nn.Module):
         return compression_output
 
 
+    def concatenate_tokenizer_output(self, x):
+        # Convert image to RGB
+        # img_pil = Image.open(file_path).convert("RGB")
+        
+        # Preprocess image
+        # transform = transforms.Compose(
+        #     [
+        #         transforms.Resize(img_size),
+        #         transforms.CenterCrop(img_size),
+        #         transforms.ToTensor(),
+        #         transforms.Normalize(mean=mean, std=std),
+        #     ]
+        # )
+        # x = transform(img_pil).unsqueeze(0)
+
+        return ft_model.tokenize(x)
+
+
     def decompress(self, compression_output):
 
         """
@@ -323,7 +346,14 @@ class Model(nn.Module):
         assert self.model_mode == ModelModes.EVALUATION and (self.training is False), (
             f'Set model mode to {ModelModes.EVALUATION} for decompression.')
 
-        latents_decoded = self.Hyperprior.decompress_forward(compression_output, device=utils.get_device())
+        # Tokenize original image
+        tokens_list = ft_model.tokenize(x)
+
+        latents_decoded = self.Hyperprior.decompress_forward(
+            compression_output,
+            tokens_list,                # Add tokens as input to decoder
+            device=utils.get_device()
+        )
 
         # Use quantized latents as input to G
         reconstruction = self.Generator(latents_decoded)

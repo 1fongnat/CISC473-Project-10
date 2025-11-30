@@ -2,6 +2,8 @@
 # Copyright (C) 2025 Apple Inc. and EPFL. All Rights Reserved.
 from io import BytesIO
 from typing import List
+import glob
+import os
 
 import einops
 import requests
@@ -75,6 +77,61 @@ def imgs_from_urls(
         torch.Tensor: A batch tensor of shape (N, C, H, W), where N is the number of images.
     """
     images = [img_from_url(url, img_size, mean, std) for url in urls]
+    return torch.cat(images, dim=0)
+
+def img_from_dir(
+    file_path: str,
+    img_size: int = 256,
+    mean: List[float] = [0.5, 0.5, 0.5],
+    std: List[float] = [0.5, 0.5, 0.5],
+) -> torch.Tensor:
+    """
+    Download an image from a URL, apply preprocessing, and return a tensor.
+
+    Parameters:
+        file_path (str): File path to the image.
+        img_size (int): The size to which the image is resized and cropped.
+        mean (List[float]): Mean for normalization.
+        std (List[float]): Standard deviation for normalization.
+
+    Returns:
+        torch.Tensor: Processed image tensor.
+    """
+    try:
+        img_pil = Image.open(file_path).convert("RGB")
+    except Exception as e:
+        raise ValueError("Failed to open image.") from e
+
+    transform = transforms.Compose(
+        [
+            transforms.Resize(img_size),
+            transforms.CenterCrop(img_size),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=mean, std=std),
+        ]
+    )
+
+    return transform(img_pil).unsqueeze(0)
+
+def imgs_from_dir(
+    dir: str,
+    img_size: int = 256,
+    mean: List[float] = [0.5, 0.5, 0.5],
+    std: List[float] = [0.5, 0.5, 0.5],
+) -> torch.Tensor:
+    """
+    Preprocess a batch of images from a directory.
+
+    Parameters:
+        dir (str): Directory containing images.
+        img_size (int): The size to which each image is resized and cropped.
+        mean (List[float]): Mean for normalization.
+        std (List[float]): Standard deviation for normalization.
+
+    Returns:
+        torch.Tensor: A batch tensor of shape (N, C, H, W), where N is the number of images.
+    """
+    images = [img_from_dir(os.path.join(dir, file), img_size, mean, std) for file in glob.glob("*.png", root_dir=dir)]
     return torch.cat(images, dim=0)
 
 
