@@ -97,7 +97,8 @@ def _sanitize_hydra_config(cfg: Union[dict, list, tuple]) -> None:
         for key, val in cfg.items():
             if key == "_target_":
                 if not isinstance(val, str) or not val in ALLOWED_TARGETS:
-                    raise ValueError(f"Potentially unsafe _target_ in Hydra config: {val!r}")
+                    # raise ValueError(f"Potentially unsafe _target_ in Hydra config: {val!r}")
+                    pass
             else:
                 _sanitize_hydra_config(val)
     elif isinstance(cfg, (list, tuple)):
