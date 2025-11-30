@@ -260,6 +260,8 @@ class FlexTokFromHub(FlexTok, PyTorchModelHubMixin):
     def __init__(self, config: dict):
 
         config = copy.deepcopy(config)
+        fix_target_paths(config)
+
         # Sanitize config before handing it off to hydra.utils.instantiate()
         _sanitize_hydra_config(config)
 
@@ -271,3 +273,14 @@ class FlexTokFromHub(FlexTok, PyTorchModelHubMixin):
             flow_matching_noise_module=instantiate(config["flow_matching_noise_module"]),
             pipeline=instantiate(config["pipeline"]),
         )
+
+def fix_target_paths(d):
+    """Hardcode the correct file paths for hydra to find"""
+    if isinstance(d, dict):
+        if "_target_" in d:
+            d["_target_"] = d["_target_"].replace("flextok.", "src.FlexTok.flextok.")
+        for v in d.values():
+            fix_target_paths(v)
+    elif isinstance(d, list):
+        for item in d:
+            fix_target_paths(item)
