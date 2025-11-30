@@ -1,5 +1,5 @@
-from flextok.flextok_wrapper import FlexTokFromHub
-from flextok.utils.demo import imgs_from_urls
+from src.FlexTok.flextok.flextok_wrapper import FlexTokFromHub
+from src.FlexTok.flextok.utils.demo import imgs_from_urls
 import matplotlib.pyplot as plt
 
 device = "cuda"

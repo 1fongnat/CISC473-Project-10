@@ -2,3 +2,4 @@ env/
 logs
 experiments/
 *.png
+__pycache__/
