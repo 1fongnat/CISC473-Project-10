@@ -79,7 +79,7 @@ def imgs_from_urls(
     images = [img_from_url(url, img_size, mean, std) for url in urls]
     return torch.cat(images, dim=0)
 
-def img_from_dir(
+def img_from_file(
     file_path: str,
     img_size: int = 256,
     mean: List[float] = [0.5, 0.5, 0.5],
@@ -131,7 +131,7 @@ def imgs_from_dir(
     Returns:
         torch.Tensor: A batch tensor of shape (N, C, H, W), where N is the number of images.
     """
-    images = [img_from_dir(os.path.join(dir, file), img_size, mean, std) for file in glob.glob("*.png", root_dir=dir)]
+    images = [img_from_file(os.path.join(dir, file), img_size, mean, std) for file in glob.glob("*.png", root_dir=dir)]
     return torch.cat(images, dim=0)
 
 

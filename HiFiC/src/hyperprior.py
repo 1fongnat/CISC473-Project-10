@@ -252,13 +252,13 @@ class Hyperprior(CodingModel):
         hyperlatent_spatial_shape = compression_output.hyperlatent_spatial_shape
         batch_shape = compression_output.batch_shape
 
-        # Concatenate the tokens to the encoded 
+        # Concatenate the tokens to the encoded latents
         print("Encoded latents shape:", latents_encoded.shape())
         print("tokens shape:", tokens.shape())
-        latents_encoded_combined = torch.cat([latents_encoded, tokens], dim=1)
+        hyperlatents_encoded_combined = torch.cat([latents_encoded, tokens], dim=1)
 
         # Decompress hyperlatents
-        hyperlatents_decoded, _ = self.hyperprior_entropy_model.decompress(hyperlatents_encoded,
+        hyperlatents_decoded, _ = self.hyperprior_entropy_model.decompress(hyperlatents_encoded_combined,
             batch_shape=batch_shape, broadcast_shape=hyperlatent_spatial_shape,
             coding_shape=compression_output.hyper_coding_shape, vectorize=self.vectorize_encoding,
             block_decode=self.block_encode)
@@ -271,7 +271,7 @@ class Hyperprior(CodingModel):
         latent_spatial_shape = latent_scales.size()[2:]
 
         # Use latent statistics to build indexed probability tables, and decompress latents
-        latents_decoded, _ = self.prior_entropy_model.decompress(latents_encoded_combined, means=latent_means,
+        latents_decoded, _ = self.prior_entropy_model.decompress(latents_encoded, means=latent_means,
             scales=latent_scales, broadcast_shape=latent_spatial_shape,
             coding_shape=compression_output.latent_coding_shape, vectorize=self.vectorize_encoding, 
             block_decode=self.block_encode)

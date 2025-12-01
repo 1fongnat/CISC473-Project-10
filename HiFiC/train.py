@@ -12,6 +12,7 @@ import numpy as np
 import os, glob, time, datetime
 import logging, pickle, argparse
 import functools, itertools
+from pathlib import Path
 
 from tqdm import tqdm, trange
 from collections import defaultdict
@@ -26,6 +27,13 @@ from torch.utils.tensorboard import SummaryWriter
 from src.model import Model
 from src.helpers import utils, datasets
 from default_config import hific_args, mse_lpips_args, directories, ModelModes, ModelTypes
+
+# Import FlexTok token dictionaries
+TOKEN_DIR = Path(__file__).parent / 'data' / 'clic_tokens'
+train_token_dict = torch.load(os.path.join(TOKEN_DIR,"train_tokens_dict.pt"))
+val_token_dict = torch.load(os.path.join(TOKEN_DIR,"val_tokens_dict.pt"))
+test_token_dict = torch.load(os.path.join(TOKEN_DIR,"test_tokens_dict.pt"))
+
 
 # go fast boi!!
 torch.backends.cudnn.benchmark = True
@@ -232,6 +240,11 @@ if __name__ == '__main__':
     general.add_argument("-lt", "--likelihood_type", choices=('gaussian', 'logistic'), default='gaussian', help="Likelihood model for latents.")
     general.add_argument("-force_gpu", "--force_set_gpu", help="Set GPU to given ID", action="store_true")
     general.add_argument("-LMM", "--use_latent_mixture_model", help="Use latent mixture model as latent entropy model.", action="store_true")
+
+    general.add_argument("-train_tok_dir", "--train_token_dir", default=None, help="Path to the data dictionary containing the tokens for the training set")
+    general.add_argument("-val_tok_dir", "--val_token_dir", default=None, help="Path to the data dictionary containing the tokens for the validation set")
+    general.add_argument("-test_tok_dir","--test_token_dir", default=None, help="Path to the data dictionary containing the tokens for the test set")
+
 
     # Optimization-related options
     optim_args = parser.add_argument_group("Optimization-related options")

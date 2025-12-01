@@ -18,11 +18,13 @@ from src.loss import losses
 from src.helpers import maths, datasets, utils
 from src.network import encoder, generator, discriminator, hyper
 from src.loss.perceptual_similarity import perceptual_loss as ps 
+from pathlib import Path
 
-# FlexTok modules
-from src.FlexTok.flextok.flextok_wrapper import FlexTok, FlexTokFromHub
-
-ft_model = FlexTokFromHub.from_pretrained('EPFL-VILAB/flextok_d18_d28_dfn').eval().to("cuda")
+# Import FlexTok token dictionaries
+TOKEN_DIR = Path(__file__).parent / 'data' / 'clic_tokens'
+train_token_dict = torch.load(os.path.join(TOKEN_DIR,"train_tokens_dict.pt"))
+val_token_dict = torch.load(os.path.join(TOKEN_DIR,"val_tokens_dict.pt"))
+test_token_dict = torch.load(os.path.join(TOKEN_DIR,"test_tokens_dict.pt"))
 
 from default_config import ModelModes, ModelTypes, hific_args, directories
 
@@ -108,6 +110,11 @@ class Model(nn.Module):
         self.squared_difference = torch.nn.MSELoss(reduction='none')
         # Expects [-1,1] images or [0,1] with normalize=True flag
         self.perceptual_loss = ps.PerceptualLoss(model='net-lin', net='alex', use_gpu=torch.cuda.is_available(), gpu_ids=[args.gpu])
+
+        # Import FlexTok token dictionaries
+        self.train_token_dict = torch.load(os.path.join(TOKEN_DIR,"train_tokens_dict.pt"))
+        self.val_token_dict = torch.load(os.path.join(TOKEN_DIR,"val_tokens_dict.pt"))
+        self.test_token_dict = torch.load(os.path.join(TOKEN_DIR,"test_tokens_dict.pt"))
         
     def store_loss(self, key, loss):
         assert type(loss) == float, 'Call .item() on loss before storage'
@@ -313,25 +320,6 @@ class Model(nn.Module):
 
         return compression_output
 
-
-    def concatenate_tokenizer_output(self, x):
-        # Convert image to RGB
-        # img_pil = Image.open(file_path).convert("RGB")
-        
-        # Preprocess image
-        # transform = transforms.Compose(
-        #     [
-        #         transforms.Resize(img_size),
-        #         transforms.CenterCrop(img_size),
-        #         transforms.ToTensor(),
-        #         transforms.Normalize(mean=mean, std=std),
-        #     ]
-        # )
-        # x = transform(img_pil).unsqueeze(0)
-
-        return ft_model.tokenize(x)
-
-
     def decompress(self, compression_output):
 
         """
@@ -346,12 +334,11 @@ class Model(nn.Module):
         assert self.model_mode == ModelModes.EVALUATION and (self.training is False), (
             f'Set model mode to {ModelModes.EVALUATION} for decompression.')
 
-        # Tokenize original image
-        tokens_list = ft_model.tokenize(x)
+        tokens_list = val_token_dict  # TODO: pass file name into function
 
         latents_decoded = self.Hyperprior.decompress_forward(
             compression_output,
-            tokens_list,                # Add tokens as input to decoder
+            tokens_list,  # Add tokens as input to decoder
             device=utils.get_device()
         )
 
